@@ -5,7 +5,87 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const init = () => {
+      const nameForm = document.querySelector('#nameForm');
+      const userForm = document.querySelector('#userForm');
+      const content = document.querySelector('#content');
 
+      // Handle Add User form submission
+      nameForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const nameField = document.querySelector('#nameField');
+        const ageField = document.querySelector('#ageField');
+
+        const name = nameField.value;
+        const age = ageField.value;
+
+        const formData = `name=${encodeURIComponent(name)}&age=${encodeURIComponent(age)}`;
+
+        fetch('/addUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          body: formData
+        })
+        .then(response => {
+          console.log('Response status:', response.status);
+          if (!response.ok) {
+            return response.text().then(text => {
+              throw new Error(`HTTP ${response.status}: ${text}`);
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          content.innerHTML = `<h1>Add User Response</h1><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+          console.log(data);
+        })
+        .catch(error => {
+          content.innerHTML = `<p>Error: ${error}</p>`;
+          console.error('Add User Error:', error);
+        });
+      });
+
+      // Handle Get Users form submission
+      userForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const urlField = document.querySelector('#urlField');
+        const methodSelect = document.querySelector('#methodSelect');
+
+        const endpoint = urlField.value;
+        const method = methodSelect.value.toUpperCase();
+
+        fetch(endpoint, {
+          method: method,
+          headers: {
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          console.log('Response status:', response.status);
+          if (!response.ok) {
+            return response.text().then(text => {
+              throw new Error(`HTTP ${response.status}: ${text}`);
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          content.innerHTML = `<h1>Success</h1><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+          console.log(data);
+        })
+        .catch(error => {
+          content.innerHTML = `<h1>Not Found</h1><br><Message:> <pre>${error}</pre>`;
+          console.error(error);
+        });
+      });
+    };
+
+    window.onload = init;
   </script>
 </head>
 <body>

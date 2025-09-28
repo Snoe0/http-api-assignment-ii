@@ -1,4 +1,4 @@
-let users = {"users": {}};
+const users = {};
 
 const addUser = (request, response, body) => {
   const responseJSON = {
@@ -15,14 +15,14 @@ const addUser = (request, response, body) => {
 
   let responseCode = 201;
 
-  if (users[body.name]) {
+  if (users.users[body.name]) {
     responseCode = 204;
   } else {
-    users[body.name] = {};
+    users.users[body.name] = {};
   }
 
-  users[body.name].name = body.name;
-  users[body.name].age = body.age;
+  users.users[body.name].name = body.name;
+  users.users[body.name].age = body.age;
 
   if (responseCode === 201) {
     response.writeHead(responseCode, { 'Content-Type': 'application/json' });
@@ -42,15 +42,6 @@ const getUsers = (request, response) => {
   response.end();
 };
 
-const getSuccess = (request, response) => {
-  const responseJSON = {
-    message: 'This is a successful response',
-  };
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  response.write(JSON.stringify(responseJSON));
-  response.end();
-};
-
 const getNotFound = (request, response) => {
   const responseJSON = {
     message: 'The page you are looking for was not found.',
@@ -64,6 +55,4 @@ const getNotFound = (request, response) => {
 
 module.exports.getUsers = getUsers;
 module.exports.addUser = addUser;
-
-module.exports.getSuccess = getSuccess;
 module.exports.getNotFound = getNotFound;

@@ -12,10 +12,8 @@ const onRequest = (request, response) => {
       htmlHandler.getIndex(request, response);
       break;
     case '/getUsers':
+    case '/getUsers?':
       jsonHandler.getUsers(request, response);
-      break;
-    case '/success':
-      jsonHandler.getSuccess(request, response);
       break;
     case '/style.css':
       htmlHandler.getCSS(request, response);
