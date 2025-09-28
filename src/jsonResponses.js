@@ -1,0 +1,69 @@
+let users = {"users": {}};
+
+const addUser = (request, response, body) => {
+  const responseJSON = {
+    message: 'Name and age are both required',
+  };
+
+  if (!body.name || !body.age) {
+    responseJSON.id = 'missingParams';
+    response.writeHead(400, { 'Content-Type': 'application/json' });
+    response.write(JSON.stringify(responseJSON));
+    response.end();
+    return;
+  }
+
+  let responseCode = 201;
+
+  if (users[body.name]) {
+    responseCode = 204;
+  } else {
+    users[body.name] = {};
+  }
+
+  users[body.name].name = body.name;
+  users[body.name].age = body.age;
+
+  if (responseCode === 201) {
+    response.writeHead(responseCode, { 'Content-Type': 'application/json' });
+    response.write(JSON.stringify({ message: 'Created Successfully' }));
+  } else {
+    response.writeHead(responseCode);
+  }
+  response.end();
+};
+
+const getUsers = (request, response) => {
+  const responseJSON = {
+    users,
+  };
+  response.writeHead(200, { 'Content-Type': 'application/json' });
+  response.write(JSON.stringify(responseJSON));
+  response.end();
+};
+
+const getSuccess = (request, response) => {
+  const responseJSON = {
+    message: 'This is a successful response',
+  };
+  response.writeHead(200, { 'Content-Type': 'application/json' });
+  response.write(JSON.stringify(responseJSON));
+  response.end();
+};
+
+const getNotFound = (request, response) => {
+  const responseJSON = {
+    message: 'The page you are looking for was not found.',
+    id: 'notFound',
+  };
+
+  response.writeHead(404, { 'Content-Type': 'application/json' });
+  response.write(JSON.stringify(responseJSON));
+  response.end();
+};
+
+module.exports.getUsers = getUsers;
+module.exports.addUser = addUser;
+
+module.exports.getSuccess = getSuccess;
+module.exports.getNotFound = getNotFound;
