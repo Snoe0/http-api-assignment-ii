@@ -15,22 +15,24 @@ const addUser = (request, response, body) => {
 
   let responseCode = 201;
 
-  if (users.users[body.name]) {
+  if (users[body.name]) {
     responseCode = 204;
   } else {
-    users.users[body.name] = {};
+    users[body.name] = {};
   }
 
-  users.users[body.name].name = body.name;
-  users.users[body.name].age = body.age;
+  users[body.name].name = body.name;
+  users[body.name].age = body.age;
 
   if (responseCode === 201) {
+    responseJSON.message = 'Created Successfully';
     response.writeHead(responseCode, { 'Content-Type': 'application/json' });
-    response.write(JSON.stringify({ message: 'Created Successfully' }));
+    response.write(JSON.stringify(responseJSON));
+    response.end();
   } else {
     response.writeHead(responseCode);
+    response.end();
   }
-  response.end();
 };
 
 const getUsers = (request, response) => {
